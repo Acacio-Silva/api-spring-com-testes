@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.project.models.User;
 import br.com.project.models.dto.UserDTO;
 import br.com.project.services.UserService;
 
