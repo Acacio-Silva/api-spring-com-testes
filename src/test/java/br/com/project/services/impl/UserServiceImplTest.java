@@ -19,6 +19,7 @@ import org.modelmapper.ModelMapper;
 import br.com.project.models.User;
 import br.com.project.models.dto.UserDTO;
 import br.com.project.repositories.UserRepository;
+import br.com.project.services.exceptions.DataIntegratyViolationException;
 import br.com.project.services.exceptions.ObjectNotFoundException;
 
 class UserServiceImplTest {
@@ -95,8 +96,41 @@ class UserServiceImplTest {
 
 	@Test
 	void testCreate() {
+		
+		when(repository.save(Mockito.any())).thenReturn(user);
+		
+		User response = serviceImpl.create(userDTO);
+		
+		assertNotNull(response);
+		assertEquals(User.class, response.getClass());
+		assertEquals(_ID, response.getId());
+		assertEquals(NOME, response.getName());
+		assertEquals(EMAIL, response.getEmail());
+		assertEquals(SENHA, response.getSenha());
+		
+		
+		
 	}
 
+
+	@Test
+	void testCreateDataIntegratyViolationException() {
+		
+		when(repository.findByEmail(Mockito.anyString())).thenReturn(optionalUser);
+		
+		try {
+			optionalUser.get().setId(2);
+			serviceImpl.create(userDTO);
+		} catch (Exception e) {
+			assertEquals(DataIntegratyViolationException.class, e.getClass());
+			assertEquals("Email já cadastrado!", e.getMessage());
+		}
+				
+	}
+
+	
+	
+	
 	@Test
 	void testUpdate() {
 	}
