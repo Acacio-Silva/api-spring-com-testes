@@ -1,6 +1,12 @@
 package br.com.project.resources;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
@@ -11,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 
 import br.com.project.models.User;
 import br.com.project.models.dto.UserDTO;
@@ -45,7 +52,22 @@ class UserResourceTest {
 	}
 
 	@Test
-	void testFindById() {
+	void testFindByIdSucess() {
+		when(service.findById(anyInt())).thenReturn(user);
+		when(mapper.map(any(), any())).thenReturn(userDTO);
+		
+		ResponseEntity<UserDTO> response = resource.findById(_ID);
+		
+		assertNotNull(response);
+		assertNotNull(response.getBody());
+		assertEquals(ResponseEntity.class, response.getClass());
+		assertEquals(UserDTO.class, response.getBody().getClass());
+		
+		assertEquals(_ID, response.getBody().getId());
+		assertEquals(NOME, response.getBody().getName());
+		assertEquals(EMAIL, response.getBody().getEmail());
+		assertEquals(SENHA, response.getBody().getSenha());
+		
 	}
 
 	@Test
@@ -62,7 +84,6 @@ class UserResourceTest {
 
 	@Test
 	void testDelete() {
-		fail("Not yet implemented");
 	}
 	
 	private void startUser() {
