@@ -1,6 +1,9 @@
 package br.com.project.services.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -156,9 +159,22 @@ class UserServiceImplTest {
 	}
 
 	@Test
-	void testDelete() {
+	void testDeleteSucess() {
+		
+		when(repository.findById(Mockito.anyInt())).thenReturn(optionalUser);
+		doNothing().when(repository).deleteById(Mockito.anyInt());
+		serviceImpl.delete(_ID);
+		verify(repository, times(1)).deleteById(Mockito.anyInt());
+		
 	}
 
+	@Test
+	void testDeleteFail() {
+	
+		
+	}
+
+	
 	private void startUser() {
 		user = new User(_ID, NOME, EMAIL, SENHA);
 		userDTO = new UserDTO(1, NOME, EMAIL, SENHA);
