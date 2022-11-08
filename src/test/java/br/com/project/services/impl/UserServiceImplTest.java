@@ -3,6 +3,7 @@ package br.com.project.services.impl;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -82,6 +83,14 @@ class UserServiceImplTest {
 
 	@Test
 	void testFindAll() {
+		when(repository.findAll()).thenReturn(List.of(user));
+		
+		List<User> response = serviceImpl.findAll();
+		
+		assertNotNull(response);
+		assertEquals(1, response.size());
+		assertEquals(User.class, response.get(0).getClass());
+		assertEquals(_ID, response.get(0).getId());
 	}
 
 	@Test
