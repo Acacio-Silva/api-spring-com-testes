@@ -8,6 +8,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import br.com.project.models.User;
@@ -51,6 +54,7 @@ class UserResourceTest {
 		startUser();
 	}
 
+	
 	@Test
 	void testFindByIdSucess() {
 		when(service.findById(anyInt())).thenReturn(user);
@@ -71,7 +75,24 @@ class UserResourceTest {
 	}
 
 	@Test
-	void testFindAll() {
+	void testFindAllSucess() {
+	
+		when(service.findAll()).thenReturn(List.of(user));
+		when(mapper.map(any(), any())).thenReturn(userDTO);
+		
+		ResponseEntity<List<UserDTO>> response = resource.findAll();
+		
+		assertNotNull(response);
+		assertNotNull(response.getBody());
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(ResponseEntity.class, response.getClass());
+		assertEquals(ArrayList.class, response.getBody().getClass());
+		assertEquals(UserDTO.class, response.getBody().get(0).getClass());
+		assertEquals(_ID, response.getBody().get(0).getId());
+		assertEquals(NOME, response.getBody().get(0).getName());
+		assertEquals(EMAIL, response.getBody().get(0).getEmail());
+		assertEquals(SENHA, response.getBody().get(0).getSenha());
+	
 	}
 
 	@Test
