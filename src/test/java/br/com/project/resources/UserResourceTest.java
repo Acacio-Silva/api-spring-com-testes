@@ -66,6 +66,7 @@ class UserResourceTest {
 		assertNotNull(response.getBody());
 		assertEquals(ResponseEntity.class, response.getClass());
 		assertEquals(UserDTO.class, response.getBody().getClass());
+		assertEquals(HttpStatus.OK, response.getStatusCode());
 		
 		assertEquals(_ID, response.getBody().getId());
 		assertEquals(NOME, response.getBody().getName());
@@ -96,11 +97,22 @@ class UserResourceTest {
 	}
 
 	@Test
-	void testCreate() {
+	void testCreateSucess() {
+	
+		when(service.create(any())).thenReturn(user);
+		
+		ResponseEntity<UserDTO> response = resource.create(userDTO);
+		
+		assertNotNull(response);
+		assertEquals(ResponseEntity.class, response.getClass());
+		assertEquals(HttpStatus.CREATED, response.getStatusCode());
+		assertNotNull(response.getHeaders().get("Location"));
+		
 	}
 
 	@Test
 	void testUpdate() {
+		
 	}
 
 	@Test
