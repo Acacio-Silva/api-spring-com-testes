@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import br.com.project.services.exceptions.DataIntegratyViolationException;
 import br.com.project.services.exceptions.ObjectNotFoundException;
 
 class ResourceExceptionHandlerTest {
@@ -39,6 +40,17 @@ class ResourceExceptionHandlerTest {
 
 	@Test
 	void testDataIntegratyException() {
+		
+		ResponseEntity<StandardError> response = exceptionHandler
+				.dataIntegratyException(new DataIntegratyViolationException("email já cadastrado"), new MockHttpServletRequest());
+		
+		assertNotNull(response);
+		assertNotNull(response.getBody());
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertEquals(ResponseEntity.class, response.getClass());
+		assertEquals(StandardError.class, response.getBody().getClass());
+		assertEquals("email já cadastrado", response.getBody().getError());
+		assertEquals(400, response.getBody().getStatus());
 	
 	}
 
